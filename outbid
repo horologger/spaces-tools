@@ -1,0 +1,6 @@
+#! /bin/bash
+echo "Starting outbid."
+
+cp /data/bidding.csv /data/bidding_last.csv
+space-cli listspaces | jq '.[] | select(.space.covenant.type == "bid" and .space.covenant.claim_height != null ) | {"name":.space.name,"claim":.space.covenant.claim_height,"bid":.space.covenant.total_burned}' | jq -s '.' | jq -r '(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv' > /data/bidding.csv
+diff /data/bidding_last.csv /data/bidding.csv | grep "-" | tail -n 1 > /data/outbid.csv
