@@ -2,4 +2,4 @@
 echo "Starting days2claim."
 CURR_BLOCK=$(space-cli getserverinfo | jq .tip.height)
 
-space-cli listspaces | jq --arg cb $CURR_BLOCK '.[] | select(.space.covenant.type == "bid" and .space.covenant.claim_height != null ) | {"name":.space.name,"claim":.space.covenant.claim_height,"bid":.space.covenant.total_burned,"height": $cb}' | mlr --ijson --opprint  put '${days2claim} = fmtnum((((int($claim) - int($height)) / 6) / 24),"%.2f"); ${claim date} = sec2localtime(fmtnum(((((int($claim) - int($height)) * 10) * 60)+systime()-(5*60*60)),"%.2f")) '
+space-cli listspaces | jq --arg cb $CURR_BLOCK '.[] | select(.space.covenant.type == "bid" and .space.covenant.claim_height != null ) | {"name":.space.name,"claim":.space.covenant.claim_height,"bid":.space.covenant.total_burned,"height": $cb}' | mlr --ijson --opprint  put '${days2} = fmtnum((((int($claim) - int($height)) / 6) / 24),"%.2f"); ${claim date} = sec2localtime(fmtnum(((((int($claim) - int($height)) * 10) * 60)+systime()-(5*60*60)),"%.2f")) '
