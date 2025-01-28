@@ -1,10 +1,12 @@
 #! /bin/bash
 
 echo "Scanning for transactions associated with this wallet..."
+
 while [ $(space-cli --output-format=json getwalletinfo | jq '.tip') -lt $(space-cli --output-format=json getserverinfo | jq '.tip.height') ]; do 
-  echo -n "Scanning: "
-  echo -n $(space-cli --output-format=json getwalletinfo | jq '.tip')
-  echo " of " $(space-cli --output-format=json getserverinfo | jq '.tip.height') " blocks"
+  TIP=$(space-cli --output-format=json getwalletinfo | jq '.tip')
+  HEIGHT=$(space-cli --output-format=json getserverinfo | jq '.tip.height')
+  printf "\r\e %s %s" "$TIP" "$HEIGHT"
   sleep 2
 done
+echo ""
 echo "Finished Scanning"
