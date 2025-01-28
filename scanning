@@ -2,12 +2,17 @@
 
 echo "Scanning for transactions associated with this wallet..."
 
-while [ $(space-cli --output-format=json getwalletinfo | jq '.tip') -lt $(space-cli --output-format=json getserverinfo | jq '.tip.height') ]; do 
-  TIP=$(space-cli --output-format=json getwalletinfo | jq '.tip')
-  HEIGHT=$(space-cli --output-format=json getserverinfo | jq '.tip.height')
+GEN=871222
+
+TIP=$(space-cli --output-format=json getwalletinfo | jq '.tip')
+HEIGHT=$(space-cli --output-format=json getserverinfo | jq '.tip.height')
+
+while [ $TIP -lt $HEIGHT ]; do 
   PERC=$(bc -l <<<"(${TIP}-${GEN})/(${HEIGHT}-${GEN})*100")
   printf "\rBlock %s of %s %.2f%% done." "$TIP" "$HEIGHT" "$PERC"
   sleep 5
+  TIP=$(space-cli --output-format=json getwalletinfo | jq '.tip')
+  HEIGHT=$(space-cli --output-format=json getserverinfo | jq '.tip.height')
 done
 echo ""
 echo "Finished Scanning"
