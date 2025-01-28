@@ -1,5 +1,5 @@
 #! /bin/bash
 echo "Starting myspaces."
-CURR_BLOCK=$(space-cli --output-format=json --output-format=json getserverinfo | jq .tip.height)
+CURR_BLOCK=$(space-cli --output-format=json getserverinfo | jq .tip.height)
 
 space-cli --output-format=json listspaces | jq --arg cb $CURR_BLOCK '.[] | select(.space.covenant.type == "transfer" and .space.covenant.expire_height != null ) | {"name":.space.name,"expire":.space.covenant.expire_height,"height": $cb}' | mlr --ijson --opprint  put '${days2} = fmtnum((((int($expire) - int($height)) / 6) / 24),"%.2f"); ${expire date} = sec2localtime(fmtnum(((((int($expire) - int($height)) * 10) * 60)+systime()-(5*60*60)),"%.2f")) '
