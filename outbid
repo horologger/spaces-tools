@@ -3,7 +3,7 @@
 
 tosend=""
 cp /data/bidding.csv /data/bidding_last.csv
-space-cli listspaces | jq '.[] | select(.space.covenant.type == "bid" and .space.covenant.claim_height != null ) | {"name":.space.name,"claim":.space.covenant.claim_height,"bid":.space.covenant.total_burned}' | jq -s '.' | jq -r '(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv' > /data/bidding.csv
+space-cli --output-format=json listspaces | jq '.[] | select(.space.covenant.type == "bid" and .space.covenant.claim_height != null ) | {"name":.space.name,"claim":.space.covenant.claim_height,"bid":.space.covenant.total_burned}' | jq -s '.' | jq -r '(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv' > /data/bidding.csv
 #The following line is for testing
 #cp /data/bidding_l.csv /data/bidding_last.csv
 diff /data/bidding.csv /data/bidding_last.csv | grep "-" | grep -v -e "---" | grep -v -e "@@" > /data/outbid.csv
